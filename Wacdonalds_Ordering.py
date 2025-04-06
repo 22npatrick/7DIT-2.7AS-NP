@@ -68,44 +68,60 @@ def order():
     os.system("cls")
     """Ask the Wacdonald's employee what the customer has ordered."""
     print("What do the customer want to order?")
+    total_price = 0
+    full_order = ""
     i = 0
     for order, price in menudict.items():
         i += 1
-        print(f"{i}, {order} ${price:.2f}")
+        print(f"{i}: {order} ${price:.2f}")
     while True:
         menu_choice = pos_int_input_validation("Type number next to the item the customer wants:   ")
         if menu_choice > i:
             error_message()
-        else:
-            break
-    i = 0
-    total_price = 0
-    full_order = ""
-    for order, price in menudict.items():
-        i += 1
-        if i == menu_choice:
-            amount_of_item = pos_int_input_validation(f"How many of {order} do you want?")
-            total_price_one_type_item = amount_of_item * price
-            total_price += total_price_one_type_item
-            total_price = round(total_price, 2)
-            individual_item_order = order
-            full_order += individual_item_order + " "
-            full_order_details =[]
-            full_order_details.append(full_order)
-            full_order_details.append(total_price)
-            choice = pos_int_input_validation("Do you to add more items to your order\n Type 1 for yes or 2 for no\n")
+            continue
+        menu_number = 0
+        for order, price in menudict.items():
+            menu_number += 1
+            if menu_number == menu_choice:
+                amount_of_item = pos_int_input_validation(f"How many of {order} do you want?")
+                total_price_one_type_item = amount_of_item * price
+                total_price += total_price_one_type_item
+                total_price = round(total_price, 2)
+                individual_item_order = f"{amount_of_item}x {order}"
+                full_order += individual_item_order + ", "
+                full_order_details = [full_order.strip(", "), total_price]
+        while True:
+            ordering = True
+            choice = pos_int_input_validation("Continue ordering?\n Type 1 for yes or 2 for no\n")
             if choice == 1:
-                continue
-            else:
-                order_details.append(full_order_details)
                 break
+            elif choice == 2:
+                order_details.append(full_order_details)
+                ordering = False
+                break
+            else:
+                error_message()
+                continue
+        if not ordering:
+            break
+
+                
+                    
 
 
 def receipt():
     customer_number = len(customer_details)
-    print(customer_details[customer_number-1])
-    print(order_details[customer_number-1])
-
+    index = customer_number-1
+    print(index)
+    print(f"Name: {customer_details[index][0]}")
+    if len(customer_details[index]) != 1:
+        print(f"Address: {customer_details[index][1]}")
+        print(f"Phone Number: {customer_details[index][2]}")
+        print(f"Delivery Order of {order_details[index][0]}")
+    else:
+        print(f"Pickup Order of {order_details[index][0]}")
+    print(f"Price{order_details[index][1]}")
+    
 
 def delivery():
     """Ask the Wacdonald's employee what their name, address, phone numer and prints their receipt."""
@@ -134,6 +150,16 @@ def delivery():
     print(customer_details)
     order()
     receipt()
+    while True:
+        choice = pos_int_input_validation("Do you to go back to menu\n Type 1 for yes or 2 for no\n")
+        if choice == 1:
+            menu()
+        elif choice == 2:
+            print("Program has ended")
+        else:
+            error_message()
+            break
+
 
 
 def pickup():
