@@ -7,14 +7,38 @@ import time
 # 2D list of customer details ordered in name, adress, phone number
 customer_details = [["NAME1", "ADDRESS1", "PHONE NUMBER1"], ["NAME2", "ADDRESS2", "PHONE NUMBER2"]]
 
-order_details = ["ORDER1", "ORDER2"]
+# 2D list of customers order details
+order_details = [["ORDER1", "TOTPRICE1"], ["ORDER2", "PRICE2"]]
+
+
+menudict = {
+  "Small Big Wac": 9.70,
+  "Large Big Wac": 15.00,
+  "Small Wac Quarter Pounder": 9.50,
+  "Large Wac Quarter Pounder": 14.50,
+  "Small Wac Chicken" : 9.50,
+  "Large Wac Chicken" : 14.50,
+  "Small Filet-Waco-Fish" : 8.80,
+  "Large Filet-Waco-Fish" : 13.80,
+  "Small Wac Cheeseburger": 6.40,
+  "Large Wac Cheeseburger": 11.40,
+  "Small Double Wac Cheeseburger": 8.10,
+  "Large Double Wac Cheeseburger": 13.10,
+  "6pc Chicken WacNuggets": 9.30,
+  "10pc Chicken WacNuggets": 12.40,
+  "Small Wac Fries": 5.70,
+  "Large Wac Fries": 10.70,
+  "Small Wac Soft Drink": 4.90,
+  "Large Wac Soft Drink": 9.90,
+  "Wac Cheese Burger Combo": 17.60,
+  "Big Wac Combo": 18.90
+}
 
 
 def error_message():
     """Send error message to user and clears screen."""
-    print("Invalid Input")
+    print("Invalid Input\n")
     time.sleep(2)
-    os.system("cls")
 
 
 def pos_int_input_validation(ques):
@@ -36,13 +60,51 @@ def non_zero_len_string(ques):
         answer_string = input(ques).strip()
         if len(answer_string) <= 0:
             error_message()
-        else:
+        else:            
             return answer_string
 
 
 def order():
+    os.system("cls")
     """Ask the Wacdonald's employee what the customer has ordered."""
-    print("")
+    print("What do the customer want to order?")
+    i = 0
+    for order, price in menudict.items():
+        i += 1
+        print(f"{i}, {order} ${price:.2f}")
+    while True:
+        menu_choice = pos_int_input_validation("Type number next to the item the customer wants:   ")
+        if menu_choice > i:
+            error_message()
+        else:
+            break
+    i = 0
+    total_price = 0
+    full_order = ""
+    for order, price in menudict.items():
+        i += 1
+        if i == menu_choice:
+            amount_of_item = pos_int_input_validation(f"How many of {order} do you want?")
+            total_price_one_type_item = amount_of_item * price
+            total_price += total_price_one_type_item
+            total_price = round(total_price, 2)
+            individual_item_order = order
+            full_order += individual_item_order + " "
+            full_order_details =[]
+            full_order_details.append(full_order)
+            full_order_details.append(total_price)
+            choice = pos_int_input_validation("Do you to add more items to your order\n Type 1 for yes or 2 for no\n")
+            if choice == 1:
+                continue
+            else:
+                order_details.append(full_order_details)
+                break
+
+
+def receipt():
+    customer_number = len(customer_details)
+    print(customer_details[customer_number-1])
+    print(order_details[customer_number-1])
 
 
 def delivery():
@@ -70,6 +132,8 @@ def delivery():
     print(customer_info)
     customer_details.append(customer_info)
     print(customer_details)
+    order()
+    receipt()
 
 
 def pickup():
@@ -80,6 +144,10 @@ def pickup():
 def order_history():
     """For order_history."""
     print("BLANK3")
+    i = 0
+    for customer, order in zip(customer_details, order_details):
+        i += 1
+        print(f"Customer {i} details : {customer}, Customer {i} order {order}")
 
 
 def menu():
@@ -101,6 +169,5 @@ def menu():
             break
         else:
             error_message()
-
 
 menu()
