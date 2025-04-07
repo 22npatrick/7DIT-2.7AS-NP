@@ -5,33 +5,34 @@ import time
 
 
 # 2D list of customer details ordered in name, adress, phone number
-customer_details = [["NAME1", "ADDRESS1", "PHONE NUMBER1"], ["NAME2"]]
+customer_details = []
 
 # 2D list of customers order details
-order_details = [["ORDER1", "TOTPRICE1"], ["ORDER2", "PRICE2"]]
+order_details = []
 
 
+# Dictonary of the items on the menu
 menudict = {
-  "Small Big Wac": 9.70,
+  "Small Big Wac": 10.00,
   "Large Big Wac": 15.00,
-  "Small Wac Quarter Pounder": 9.50,
-  "Large Wac Quarter Pounder": 14.50,
-  "Small Wac Chicken" : 9.50,
-  "Large Wac Chicken" : 14.50,
-  "Small Filet-Waco-Fish" : 8.80,
-  "Large Filet-Waco-Fish" : 13.80,
-  "Small Wac Cheeseburger": 6.40,
-  "Large Wac Cheeseburger": 11.40,
-  "Small Double Wac Cheeseburger": 8.10,
-  "Large Double Wac Cheeseburger": 13.10,
-  "6pc Chicken WacNuggets": 9.30,
-  "10pc Chicken WacNuggets": 12.40,
+  "Small Wac Quarter Pounder": 9.49,
+  "Large Wac Quarter Pounder": 14.49,
+  "Small Wac Chicken" : 9.49,
+  "Large Wac Chicken" : 14.49,
+  "Small Filet-Waco-Fish" : 8.79,
+  "Large Filet-Waco-Fish" : 13.79,
+  "Small Wac Cheeseburger": 6.39,
+  "Large Wac Cheeseburger": 11.39,
+  "Small Double Wac Cheeseburger": 8.99,
+  "Large Double Wac Cheeseburger": 13.99,
+  "6pc Chicken WacNuggets": 9.39,
+  "10pc Chicken WacNuggets": 12.39,
   "Small Wac Fries": 5.70,
   "Large Wac Fries": 10.70,
-  "Small Wac Soft Drink": 4.90,
-  "Large Wac Soft Drink": 9.90,
-  "Wac Cheese Burger Combo": 17.60,
-  "Big Wac Combo": 18.90
+  "Small Wac Soft Drink": 4.89,
+  "Large Wac Soft Drink": 9.89,
+  "Wac Cheese Burger Combo": 17.69,
+  "Big Wac Combo": 18.89
 }
 
 
@@ -62,8 +63,10 @@ def non_zero_len_string(ques):
             error_message()
         else:            
             return answer_string
-        
-def continue_or_stop_program():
+
+
+def back_to_menu():
+    "Asks the Wacdonald's employee if they want to go back to the menu or if they want to stop the program"
     while True:
         choice = pos_int_input_validation("Do you to go back to menu\n Type 1 for yes or 2 for no\n")
         if choice == 1:
@@ -79,16 +82,16 @@ def continue_or_stop_program():
 def order():
     os.system("cls")
     """Ask the Wacdonald's employee what the customer has ordered."""
-    print("What do the customer want to order?")
+    print("What does the customer want to order?")
     total_price = 0
     full_order = ""
-    i = 0
+    menu_item_number = 0
     for order, price in menudict.items():
-        i += 1
-        print(f"{i}: {order} ${price:.2f}")
+        menu_item_number += 1
+        print(f"{menu_item_number}: {order} ${price:.2f}")
     while True:
         menu_choice = pos_int_input_validation("Type number next to the item the customer wants:   ")
-        if menu_choice > i:
+        if menu_choice > menu_item_number:
             error_message()
             continue
         menu_number = 0
@@ -117,14 +120,10 @@ def order():
         if not ordering:
             break
 
-                
-                    
-
 
 def receipt():
     customer_number = len(customer_details)
     index = customer_number-1
-    print(index)
     print(f"Name: {customer_details[index][0]}")
     if len(customer_details[index]) != 1:
         print(f"Address: {customer_details[index][1]}")
@@ -162,9 +161,7 @@ def delivery():
     print(customer_details)
     order()
     receipt()
-    continue_or_stop_program()
-
-
+    back_to_menu()
 
 
 def pickup():
@@ -177,22 +174,24 @@ def pickup():
     print(customer_details)
     order()
     receipt()
-    continue_or_stop_program()
+    back_to_menu()
 
 
 def order_history():
-    """For order_history."""
-    print("BLANK3")
-    i = 0
-    for customer, order in zip(customer_details, order_details):
-        i += 1
-        if len(customer_details[i-1]) != 1:
-            print(f"Customer {i} Name : {customer[0]}, Customer {i} ordered {order}")
-        else:
-            print(f"Customer {i} Name : {customer[0]}, Address : {customer[1]},  Phone Number : {customer[2]},  Customer {i} ordered {order}")
-    continue_or_stop_program()
+    """Prints out the order history"""
+    os.system('cls')
+    if len(customer_details) != 0:
+        i = 0
+        for customer, order in zip(customer_details, order_details):
+            i += 1
+            if len(customer) == 1:
+                print(f"Customer {i}| Name : {customer[0]}, Customer {i} ordered {order[0]} with total price of ${order[1]}")
+            else:
+                print(f"Customer {i}| Name : {customer[0]}, Address : {customer[1]},  Phone Number : {customer[2]},  Customer {i} ordered {order[0]} with total price of ${order[1]}")
+    else:
+        print("\nEnter at least 1 order to see order history")
+    back_to_menu()
     
-
 
 def menu():
     """Menu system for program that runs at the start of the program."""
