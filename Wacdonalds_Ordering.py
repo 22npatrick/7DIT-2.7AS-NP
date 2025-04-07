@@ -17,10 +17,10 @@ menudict = {
   "Large Big Wac": 15.00,
   "Small Wac Quarter Pounder": 9.49,
   "Large Wac Quarter Pounder": 14.49,
-  "Small Wac Chicken" : 9.49,
-  "Large Wac Chicken" : 14.49,
-  "Small Filet-Waco-Fish" : 8.79,
-  "Large Filet-Waco-Fish" : 13.79,
+  "Small Wac Chicken": 9.49,
+  "Large Wac Chicken": 14.49,
+  "Small Filet-Waco-Fish": 8.79,
+  "Large Filet-Waco-Fish": 13.79,
   "Small Wac Cheeseburger": 6.39,
   "Large Wac Cheeseburger": 11.39,
   "Small Double Wac Cheeseburger": 8.99,
@@ -61,7 +61,7 @@ def non_zero_len_string(ques):
         answer_string = input(ques).strip()
         if len(answer_string) <= 0:
             error_message()
-        else:            
+        else:
             return answer_string
 
 
@@ -80,8 +80,8 @@ def back_to_menu():
 
 
 def order():
-    os.system("cls")
     """Ask the Wacdonald's employee what the customer has ordered."""
+    os.system("cls")
     print("What does the customer want to order?")
     # Create local varable that will be used in this function
     total_price = 0
@@ -98,14 +98,14 @@ def order():
         # If true then makes user type number in again
         if menu_choice > menu_item_number:
             error_message()
-            continue 
+            continue
         menu_number = 0
         # Asks how many of the menu item the customer wants, calculates how much the price is
         # And adds both of them to the customers full_order_details
         for order, price in menudict.items():
             menu_number += 1
             if menu_number == menu_choice:
-                amount_of_item = pos_int_input_validation(f"How many of {order} does the customer want?")
+                amount_of_item = pos_int_input_validation(f"How many of {order} does the customer want? ")
                 total_item_amount_price = amount_of_item * price
                 total_price += total_item_amount_price
                 total_price = round(total_price, 2)
@@ -145,7 +145,7 @@ def receipt():
     else:
         print(f"Pickup Order of {order_details[index][0]}")
     print(f"Price of ${order_details[index][1]:.2f}")
-    
+
 
 def delivery():
     """Ask the Wacdonald's employee what their name, address, phone numer and print their receipt."""
@@ -156,9 +156,9 @@ def delivery():
     street_name = non_zero_len_string("Type in the customer's street name: ")
     suburb_or_locality = non_zero_len_string("Type in the customer's suburb or locality:   ")
     city_or_town = non_zero_len_string("Type in the customer's city or town:  ")
-    #Checks if the customer has inputed a number that has between 7-11 digits 
+    # Checks if the customer has inputed a number that has between 7-11 digits
     while True:
-        phone_number = pos_int_input_validation("Type in the customer's phone number (in format XXXXXXXX where the phone number can only have between 7 and 11 digits, including both 7 and 11): ")
+        phone_number = pos_int_input_validation("Type in the customer's phone number (in format XXXXXXXX where the phone number can only have between 7 and 11 digits, including both 7 and 11  (this limit does not include leading 0's): ")
         if 7 <= len(str(phone_number)) <= 11:
             break
         else:
@@ -177,7 +177,7 @@ def delivery():
 def pickup():
     """Ask the Wacdonald's employee what their name is and prinits their receipt."""
     os.system('cls')
-     # Asks employee for the customers name only and adds it to customer details
+    # Asks employee for the customers name only and adds it to customer details
     name = non_zero_len_string("Type in the customers name:  ")
     customer_info = [name]
     customer_details.append(customer_info)
@@ -189,7 +189,7 @@ def pickup():
 
 
 def order_history():
-    """Print out the order history"""
+    """Print out the order history."""
     os.system('cls')
     # Checks if there has not been and order
     # If not that prints statment and does back_to_menu()
@@ -206,7 +206,7 @@ def order_history():
     else:
         print("\nEnter at least 1 order to see order history")
     back_to_menu()
-    
+
 
 def menu():
     """Menu system for program that runs at the start of the program."""
@@ -215,7 +215,7 @@ def menu():
         print("Type 1 for Delivery ")
         print("Type 2 for Pickup")
         print("Type 3 for order history")
-        print("Type 4 for end program")
+        print("Type 4 to end program")
         choice = pos_int_input_validation(":    ")
         if choice == 1:
             delivery()
@@ -230,5 +230,6 @@ def menu():
             break
         else:
             error_message()
+
 
 menu()
