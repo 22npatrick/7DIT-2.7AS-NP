@@ -5,7 +5,7 @@ import time
 
 
 # 2D list of customer details ordered in name, adress, phone number
-customer_details = [["NAME1", "ADDRESS1", "PHONE NUMBER1"], ["NAME2", "ADDRESS2", "PHONE NUMBER2"]]
+customer_details = [["NAME1", "ADDRESS1", "PHONE NUMBER1"], ["NAME2"]]
 
 # 2D list of customers order details
 order_details = [["ORDER1", "TOTPRICE1"], ["ORDER2", "PRICE2"]]
@@ -62,6 +62,18 @@ def non_zero_len_string(ques):
             error_message()
         else:            
             return answer_string
+        
+def continue_or_stop_program():
+    while True:
+        choice = pos_int_input_validation("Do you to go back to menu\n Type 1 for yes or 2 for no\n")
+        if choice == 1:
+            menu()
+        elif choice == 2:
+            print("Program has ended")
+            break
+        else:
+            error_message()
+            continue
 
 
 def order():
@@ -120,7 +132,7 @@ def receipt():
         print(f"Delivery Order of {order_details[index][0]}")
     else:
         print(f"Pickup Order of {order_details[index][0]}")
-    print(f"Price{order_details[index][1]}")
+    print(f"Price of ${order_details[index][1]:.2f}")
     
 
 def delivery():
@@ -150,21 +162,22 @@ def delivery():
     print(customer_details)
     order()
     receipt()
-    while True:
-        choice = pos_int_input_validation("Do you to go back to menu\n Type 1 for yes or 2 for no\n")
-        if choice == 1:
-            menu()
-        elif choice == 2:
-            print("Program has ended")
-        else:
-            error_message()
-            break
+    continue_or_stop_program()
+
 
 
 
 def pickup():
-    """For pickup."""
-    print("BLANK2")
+    """Ask the Wacdonald's employee what their name is and prinits their receipt."""
+    os.system('cls')
+    name = non_zero_len_string("Type in the customers name:  ")
+    customer_info = []
+    customer_info.append(name)
+    customer_details.append(customer_info)
+    print(customer_details)
+    order()
+    receipt()
+    continue_or_stop_program()
 
 
 def order_history():
@@ -173,7 +186,12 @@ def order_history():
     i = 0
     for customer, order in zip(customer_details, order_details):
         i += 1
-        print(f"Customer {i} details : {customer}, Customer {i} order {order}")
+        if len(customer_details[i-1]) != 1:
+            print(f"Customer {i} Name : {customer[0]}, Customer {i} ordered {order}")
+        else:
+            print(f"Customer {i} Name : {customer[0]}, Address : {customer[1]},  Phone Number : {customer[2]},  Customer {i} ordered {order}")
+    continue_or_stop_program()
+    
 
 
 def menu():
@@ -183,6 +201,7 @@ def menu():
         print("Type 1 for Delivery ")
         print("Type 2 for Pickup")
         print("Type 3 for order history")
+        print("Type 4 for end program")
         choice = pos_int_input_validation(":    ")
         if choice == 1:
             delivery()
@@ -192,6 +211,8 @@ def menu():
             break
         elif choice == 3:
             order_history()
+            break
+        elif choice == 4:
             break
         else:
             error_message()
