@@ -37,7 +37,7 @@ menudict = {
 
 
 def error_message():
-    """Send error message to user and clears screen."""
+    """Send error message to user and wait 2 seconds."""
     print("Invalid Input\n")
     time.sleep(2)
 
@@ -66,45 +66,55 @@ def non_zero_len_string(ques):
 
 
 def back_to_menu():
-    "Asks the Wacdonald's employee if they want to go back to the menu or if they want to stop the program"
+    """Ask the Wacdonald's employee if they want to go back to the menu or if they want to stop the program."""
     while True:
-        choice = pos_int_input_validation("Do you to go back to menu\n Type 1 for yes or 2 for no\n")
+        choice = pos_int_input_validation("Do you want to go back to the menu?\n Type 1 for yes or 2 for no\n")
         if choice == 1:
             menu()
+            break
         elif choice == 2:
             print("Program has ended")
             break
         else:
             error_message()
-            continue
 
 
 def order():
     os.system("cls")
     """Ask the Wacdonald's employee what the customer has ordered."""
     print("What does the customer want to order?")
+    # Create local varable that will be used in this function
     total_price = 0
     full_order = ""
     menu_item_number = 0
+    # Prints out the menu in a formated way
     for order, price in menudict.items():
         menu_item_number += 1
         print(f"{menu_item_number}: {order} ${price:.2f}")
+    # While loop that asks the Wacdonald's employee what the customer has ordered.
     while True:
         menu_choice = pos_int_input_validation("Type number next to the item the customer wants:   ")
+        # Checks to see if chosen number by the employee is a above  the max number of the menu
+        # If true then makes user type number in again
         if menu_choice > menu_item_number:
             error_message()
-            continue
+            continue 
         menu_number = 0
+        # Asks how many of the menu item the customer wants, calculates how much the price is
+        # And adds both of them to the customers full_order_details
         for order, price in menudict.items():
             menu_number += 1
             if menu_number == menu_choice:
-                amount_of_item = pos_int_input_validation(f"How many of {order} do you want?")
-                total_price_one_type_item = amount_of_item * price
-                total_price += total_price_one_type_item
+                amount_of_item = pos_int_input_validation(f"How many of {order} does the customer want?")
+                total_item_amount_price = amount_of_item * price
+                total_price += total_item_amount_price
                 total_price = round(total_price, 2)
-                individual_item_order = f"{amount_of_item}x {order}"
+                individual_item_order = f"{amount_of_item} x {order}"
                 full_order += individual_item_order + ", "
                 full_order_details = [full_order.strip(", "), total_price]
+        # Asks if the employee wants to keep ordering for the customer
+        # If yes then goes back to the start of the outer loop
+        # If no then finishes the ordering function
         while True:
             ordering = True
             choice = pos_int_input_validation("Continue ordering?\n Type 1 for yes or 2 for no\n")
@@ -122,9 +132,12 @@ def order():
 
 
 def receipt():
+    """Print out the receipt of the customer."""
+    # Gets the index of the most recent customer to print out the receit of the customer
     customer_number = len(customer_details)
     index = customer_number-1
     print(f"Name: {customer_details[index][0]}")
+    # Checks if order is delivery or pickup and print the corresponding statements
     if len(customer_details[index]) != 1:
         print(f"Address: {customer_details[index][1]}")
         print(f"Phone Number: {customer_details[index][2]}")
@@ -135,30 +148,27 @@ def receipt():
     
 
 def delivery():
-    """Ask the Wacdonald's employee what their name, address, phone numer and prints their receipt."""
+    """Ask the Wacdonald's employee what their name, address, phone numer and print their receipt."""
     os.system('cls')
-    print("BLANK1")
+    # Asks employee for all the customers infomation
     name = non_zero_len_string("Type in the customers name:  ")
     street_number = pos_int_input_validation("Type in the customer's street number: ")
     street_name = non_zero_len_string("Type in the customer's street name: ")
     suburb_or_locality = non_zero_len_string("Type in the customer's suburb or locality:   ")
     city_or_town = non_zero_len_string("Type in the customer's city or town:  ")
+    #Checks if the customer has inputed a number that has between 7-11 digits 
     while True:
-        phone_number = pos_int_input_validation("Type in the customer's phone number (in format XXXXXXXX where the phone number can only have between 7 and 11 digits): ")
+        phone_number = pos_int_input_validation("Type in the customer's phone number (in format XXXXXXXX where the phone number can only have between 7 and 11 digits, including both 7 and 11): ")
         if 7 <= len(str(phone_number)) <= 11:
             break
         else:
             error_message()
-    customer_info = []
-    customer_info.append(name)
+    # Adds infomation into customer details
     address_tuple = (str(street_number), street_name, suburb_or_locality, city_or_town)
-    print(address_tuple)
     address = " ".join(address_tuple)
-    customer_info.append(address)
-    customer_info.append(phone_number)
-    print(customer_info)
+    customer_info = [name, address, phone_number]
     customer_details.append(customer_info)
-    print(customer_details)
+    # Asks for the order, prints receipt and goes asks if they want to go back to the menu
     order()
     receipt()
     back_to_menu()
@@ -167,27 +177,32 @@ def delivery():
 def pickup():
     """Ask the Wacdonald's employee what their name is and prinits their receipt."""
     os.system('cls')
+     # Asks employee for the customers name only and adds it to customer details
     name = non_zero_len_string("Type in the customers name:  ")
-    customer_info = []
-    customer_info.append(name)
+    customer_info = [name]
     customer_details.append(customer_info)
     print(customer_details)
+    # Asks for the order, prints receipt and goes asks if they want to go back to the menu
     order()
     receipt()
     back_to_menu()
 
 
 def order_history():
-    """Prints out the order history"""
+    """Print out the order history"""
     os.system('cls')
+    # Checks if there has not been and order
+    # If not that prints statment and does back_to_menu()
+    # If ther has been at least 1 order prints out all orders
     if len(customer_details) != 0:
         i = 0
         for customer, order in zip(customer_details, order_details):
             i += 1
+            # Checks if order is delivery or pickup and print the corresponding statements
             if len(customer) == 1:
-                print(f"Customer {i}| Name : {customer[0]}, Customer {i} ordered {order[0]} with total price of ${order[1]}")
+                print(f"Customer {i}| Name : {customer[0]}, Customer {i} ordered {order[0]} with total price of ${order[1]:.2f}")
             else:
-                print(f"Customer {i}| Name : {customer[0]}, Address : {customer[1]},  Phone Number : {customer[2]},  Customer {i} ordered {order[0]} with total price of ${order[1]}")
+                print(f"Customer {i}| Name : {customer[0]}, Address : {customer[1]},  Phone Number : {customer[2]},  Customer {i} ordered {order[0]} with total price of ${order[1]:.2f}")
     else:
         print("\nEnter at least 1 order to see order history")
     back_to_menu()
@@ -196,7 +211,7 @@ def order_history():
 def menu():
     """Menu system for program that runs at the start of the program."""
     while True:
-        print("Is the order delivery or pickup?")
+        print("\nIs the order delivery or pickup?")
         print("Type 1 for Delivery ")
         print("Type 2 for Pickup")
         print("Type 3 for order history")
